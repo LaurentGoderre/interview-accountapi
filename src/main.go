@@ -23,5 +23,7 @@ func main() {
       SecondaryIdentification: "A1B2C3D4",
     },
   };
-  // Create(account);
+  Create(account);
+
+  Delete(account);
 }
