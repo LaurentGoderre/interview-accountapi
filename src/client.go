@@ -18,16 +18,16 @@ type AccountDataPayload struct {
     Data *models.AccountData `json:"data"`
 }
 
-func Create(payload *models.AccountData) (bool, error) {
+func Create(payload *models.AccountData) (error) {
   url := fmt.Sprintf("%s/%s", host, accountRootUrl);
   json, _ := json.Marshal(AccountDataPayload{Data: payload});
   _, err := http.Post(url, jsonMime, strings.NewReader(string(json)));
 
   if err != nil {
-    return false, err;
+    return err;
   }
 
-  return true, err;
+  return nil;
 }
 
 func Fetch(payload *models.AccountData) (*models.AccountData, error) {
@@ -59,24 +59,24 @@ func FetchById(id *string) (*models.AccountData, error) {
   return account.Data, nil;
 }
 
-func Delete(payload *models.AccountData) (bool, error)  {
+func Delete(payload *models.AccountData) (error)  {
   return DeleteById(&payload.ID);
 }
 
-func DeleteById(id *string) (bool, error) {
+func DeleteById(id *string) (error) {
   url := fmt.Sprintf("%s/%s/%s?version=0", host, accountRootUrl, *id);
   req, reqErr := http.NewRequest(http.MethodDelete, url, nil);
 
   if reqErr != nil {
-    return false, reqErr;
+    return reqErr;
   }
 
   client := &http.Client{}
   _, err := client.Do(req)
 
   if err != nil {
-    return false, err;
+    return err;
   }
 
-  return true, err;
+  return nil;
 }
