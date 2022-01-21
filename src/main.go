@@ -1,5 +1,9 @@
 package main
 
+import(
+  "fmt"
+)
+
 func main() {
   country := "GB";
   matchingOpt := false;
@@ -25,5 +29,8 @@ func main() {
   };
   Create(account);
 
-  Delete(account);
+  data, _ := Fetch(&AccountData {ID: "0f0d5bfd-c041-44cc-82b9-7c01214b9354"});
+  fmt.Println(data.Type);
+
+  // Delete(account);
 }

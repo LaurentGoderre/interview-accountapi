@@ -2,6 +2,7 @@ package main
 
 import(
   "encoding/json"
+  "io"
   "fmt"
   "net/http"
   "os"
@@ -10,13 +11,14 @@ import(
 
 var host = os.Getenv("API_HOST");
 var jsonMime = "application/json"
+var accountRootUrl = "v1/organisation/accounts";
 
 type AccountDataPayload struct {
     Data *AccountData `json:"data"`
 }
 
 func Create(payload *AccountData) (bool, error) {
-  url := fmt.Sprintf("%s/v1/organisation/accounts", host);
+  url := fmt.Sprintf("%s/%s", host, accountRootUrl);
   json, _ := json.Marshal(AccountDataPayload{Data: payload});
   _, err := http.Post(url, jsonMime, strings.NewReader(string(json)));
 
@@ -27,13 +29,41 @@ func Create(payload *AccountData) (bool, error) {
   return true, err;
 }
 
+func Fetch(payload *AccountData) (*AccountData, error) {
+  return FetchById(&payload.ID);
+}
+
+func FetchById(id *string) (*AccountData, error) {
+  url := fmt.Sprintf("%s/%s/%s", host, accountRootUrl, *id);
+  resp, getErr := http.Get(url);
+
+  if getErr != nil {
+    return nil, getErr;
+  }
+
+  defer resp.Body.Close();
+  payload, readErr := io.ReadAll(resp.Body);
+
+  if readErr != nil {
+    return nil, readErr;
+  }
+
+  account := &AccountDataPayload{};
+  jsonErr := json.Unmarshal(payload, account);
+
+  if jsonErr != nil {
+    return nil, jsonErr;
+  }
+
+  return account.Data, nil;
+}
+
 func Delete(payload *AccountData) (bool, error)  {
   return DeleteById(&payload.ID);
 }
 
 func DeleteById(id *string) (bool, error) {
-  url := fmt.Sprintf("%s/v1/organisation/accounts/%s?version=0", host, *id);
-  fmt.Println(url);
+  url := fmt.Sprintf("%s/%s/%s?version=0", host, accountRootUrl, *id);
   req, reqErr := http.NewRequest(http.MethodDelete, url, nil);
 
   if reqErr != nil {
