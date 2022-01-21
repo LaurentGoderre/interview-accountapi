@@ -68,7 +68,6 @@ func DeleteById(id *string) (bool, error) {
   req, reqErr := http.NewRequest(http.MethodDelete, url, nil);
 
   if reqErr != nil {
-    fmt.Println(reqErr.Error);
     return false, reqErr;
   }
 
@@ -76,7 +75,6 @@ func DeleteById(id *string) (bool, error) {
   _, err := client.Do(req)
 
   if err != nil {
-    fmt.Println(err.Error);
     return false, err;
   }
 

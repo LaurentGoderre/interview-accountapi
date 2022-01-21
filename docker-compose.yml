@@ -21,6 +21,9 @@ services:
       - DATABASE-PASSWORD=123
     ports:
       - 8080:8080
+    logging:
+      driver: none
+
   postgresql:
     # Could use a Postgres EDD tool I created to seperate the db creation into it's own layer
     # https://github.com/LaurentGoderre/pg-evolve
@@ -36,14 +39,18 @@ services:
       - POSTGRES_PASSWORD=password
     volumes:
       - ./scripts/db:/docker-entrypoint-initdb.d/
+    logging:
+      driver: none
 
   vault:
     image: vault:1.6.3
     environment:
       - SKIP_SETCAP=1
       - VAULT_DEV_ROOT_TOKEN_ID=8fb95528-57c6-422e-9722-d2147bcba8ed
+    logging:
+      driver: none
 
-  client_lib:
+  main:
     image: form3-accountapi
     build: .
     depends_on:
@@ -55,3 +62,12 @@ services:
       retries: 5
     environment:
       - API_HOST=http://accountapi:8080
+
+  test:
+    image: form3-accountapi
+    depends_on:
+      - main
+    environment:
+      - CGO_ENABLED=0
+    working_dir: /usr/local/go/src/form3/account/client
+    command: ["go", "test"]
