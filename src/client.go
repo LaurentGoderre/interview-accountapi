@@ -18,8 +18,16 @@ type AccountDataPayload struct {
     Data *models.AccountData `json:"data"`
 }
 
+func getUrl(params ...string) (string) {
+  if (len(params) > 0) {
+    return fmt.Sprintf("%s/%s/%s", host, accountRootUrl, params[0]);
+  }
+
+  return fmt.Sprintf("%s/%s", host, accountRootUrl);
+}
+
 func Create(payload *models.AccountData) (error) {
-  url := fmt.Sprintf("%s/%s", host, accountRootUrl);
+  url := getUrl();
   json, _ := json.Marshal(AccountDataPayload{Data: payload});
   _, err := http.Post(url, jsonMime, strings.NewReader(string(json)));
 
@@ -35,7 +43,7 @@ func Fetch(payload *models.AccountData) (*models.AccountData, error) {
 }
 
 func FetchById(id *string) (*models.AccountData, error) {
-  url := fmt.Sprintf("%s/%s/%s", host, accountRootUrl, *id);
+  url := getUrl(*id);
   resp, getErr := http.Get(url);
 
   if getErr != nil {
@@ -64,7 +72,7 @@ func Delete(payload *models.AccountData) (error)  {
 }
 
 func DeleteById(id *string) (error) {
-  url := fmt.Sprintf("%s/%s/%s?version=0", host, accountRootUrl, *id);
+  url := getUrl(*id);
   req, reqErr := http.NewRequest(http.MethodDelete, url, nil);
 
   if reqErr != nil {
