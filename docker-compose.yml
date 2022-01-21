@@ -55,11 +55,7 @@ services:
     build: .
     depends_on:
       - accountapi
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://laccountapi:8080/v1/health"]
-      interval: 200s
-      timeout: 200s
-      retries: 5
+    entrypoint: /entrypoint.sh
     environment:
       - API_HOST=http://accountapi:8080
 
