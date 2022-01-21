@@ -1,3 +1,8 @@
+// Presumably this would be ina seperate module that is shared with
+// the API module
+
+package main
+
 // Account represents an account in the form3 org section.
 // See https://api-docs.form3.tech/api.html#organisation-accounts for
 // more information about fields.
