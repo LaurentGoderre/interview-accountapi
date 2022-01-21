@@ -77,7 +77,7 @@ func Delete(payload *models.AccountData) (error)  {
 }
 
 func DeleteById(id *string) (error) {
-  url := getUrl(*id);
+  url := fmt.Sprintf("%s?version=0", getUrl(*id));
   req, reqErr := http.NewRequest(http.MethodDelete, url, nil);
 
   if reqErr != nil {
