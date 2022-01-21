@@ -179,3 +179,6 @@ func TestDeleteFail(t *testing.T) {
     t.Errorf("didn't return the error");
   }
 }
+
+
+// TODO: Find way to test the shorthand functions without duplicatig the entire tests

@@ -11,6 +11,8 @@ import(
   "form3/account/models"
 )
 
+// This is my first time using go.
+
 var host = os.Getenv("API_HOST");
 var jsonMime = "application/json"
 var accountRootUrl = "v1/organisation/accounts";
