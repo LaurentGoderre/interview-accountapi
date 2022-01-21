@@ -85,10 +85,14 @@ func DeleteById(id *string) (error) {
   }
 
   client := &http.Client{}
-  _, err := client.Do(req)
+  res, err := client.Do(req)
 
   if err != nil {
     return err;
+  }
+
+  if (res.StatusCode != http.StatusOK && res.StatusCode != http.StatusNoContent) {
+    return errors.New(res.Status)
   }
 
   return nil;

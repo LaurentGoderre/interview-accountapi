@@ -135,3 +135,47 @@ func TestFetchFail(t *testing.T) {
     t.Errorf("didn't return the json error");
   }
 }
+
+func TestDelete(t *testing.T) {
+  wantUrl := "/v1/organisation/accounts/foo?version=0"
+  wantMethod := "DELETE"
+  gotUrl := "";
+  gotMethod := "";
+  srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    gotUrl = r.URL.String();
+    gotMethod = r.Method;
+    w.WriteHeader(http.StatusOK);
+  }))
+
+  host = srv.URL;
+
+  err := Delete(&models.AccountData {ID: "foo"});
+  srv.Close();
+
+  if err != nil {
+    t.Errorf("Unexpected error on request: %s", err);
+  }
+  if gotUrl != wantUrl {
+    t.Errorf("want url %s, got %s", wantUrl, gotUrl);
+  }
+  if gotMethod != wantMethod {
+    t.Errorf("want http method %s, got %s", wantMethod, gotMethod);
+  }
+}
+
+func TestDeleteFail(t *testing.T) {
+  srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    http.Error(w, "Bad Request", http.StatusBadRequest);
+    r.Body.Close();
+    return;
+  }))
+
+  host = srv.URL;
+
+  err := Delete(&models.AccountData {ID: "foo"});
+  srv.Close();
+
+  if err == nil {
+    t.Errorf("didn't return the error");
+  }
+}
