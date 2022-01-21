@@ -2,6 +2,8 @@ package main
 
 import(
   "fmt"
+  "form3/account/models"
+  "form3/account/client"
 )
 
 func main() {
@@ -9,11 +11,11 @@ func main() {
   matchingOpt := false;
   classification := "Personal";
   jointAccount := false;
-  account := &AccountData {
+  account := &models.AccountData {
     ID: "0f0d5bfd-c041-44cc-82b9-7c01214b9354",
     OrganisationID: "be48dd41-9358-4670-97cd-64b93ad42324",
     Type: "accounts",
-    Attributes: &AccountAttributes {
+    Attributes: &models.AccountAttributes {
       Country: &country,
       BaseCurrency: "GBP",
       BankID: "400302",
@@ -27,10 +29,10 @@ func main() {
       SecondaryIdentification: "A1B2C3D4",
     },
   };
-  Create(account);
+  client.Create(account);
 
-  data, _ := Fetch(&AccountData {ID: "0f0d5bfd-c041-44cc-82b9-7c01214b9354"});
+  data, _ := client.Fetch(&models.AccountData {ID: "0f0d5bfd-c041-44cc-82b9-7c01214b9354"});
   fmt.Println(data.Type);
 
-  // Delete(account);
+  client.Delete(account);
 }

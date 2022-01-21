@@ -1,4 +1,4 @@
-package main
+package client
 
 import(
   "encoding/json"
@@ -7,6 +7,7 @@ import(
   "net/http"
   "os"
   "strings"
+  "form3/account/models"
 )
 
 var host = os.Getenv("API_HOST");
@@ -14,10 +15,10 @@ var jsonMime = "application/json"
 var accountRootUrl = "v1/organisation/accounts";
 
 type AccountDataPayload struct {
-    Data *AccountData `json:"data"`
+    Data *models.AccountData `json:"data"`
 }
 
-func Create(payload *AccountData) (bool, error) {
+func Create(payload *models.AccountData) (bool, error) {
   url := fmt.Sprintf("%s/%s", host, accountRootUrl);
   json, _ := json.Marshal(AccountDataPayload{Data: payload});
   _, err := http.Post(url, jsonMime, strings.NewReader(string(json)));
@@ -29,11 +30,11 @@ func Create(payload *AccountData) (bool, error) {
   return true, err;
 }
 
-func Fetch(payload *AccountData) (*AccountData, error) {
+func Fetch(payload *models.AccountData) (*models.AccountData, error) {
   return FetchById(&payload.ID);
 }
 
-func FetchById(id *string) (*AccountData, error) {
+func FetchById(id *string) (*models.AccountData, error) {
   url := fmt.Sprintf("%s/%s/%s", host, accountRootUrl, *id);
   resp, getErr := http.Get(url);
 
@@ -58,7 +59,7 @@ func FetchById(id *string) (*AccountData, error) {
   return account.Data, nil;
 }
 
-func Delete(payload *AccountData) (bool, error)  {
+func Delete(payload *models.AccountData) (bool, error)  {
   return DeleteById(&payload.ID);
 }
 
