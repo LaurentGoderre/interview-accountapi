@@ -2,6 +2,7 @@ package client
 
 import(
   "encoding/json"
+  "errors"
   "io"
   "fmt"
   "net/http"
@@ -29,10 +30,14 @@ func getUrl(params ...string) (string) {
 func Create(payload *models.AccountData) (error) {
   url := getUrl();
   json, _ := json.Marshal(AccountDataPayload{Data: payload});
-  _, err := http.Post(url, jsonMime, strings.NewReader(string(json)));
+  res, err := http.Post(url, jsonMime, strings.NewReader(string(json)));
 
   if err != nil {
     return err;
+  }
+
+  if (res.StatusCode != http.StatusCreated) {
+    return errors.New(res.Status)
   }
 
   return nil;
